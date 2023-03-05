@@ -79,7 +79,7 @@ app.get('/server/sign-in/notion', async (req, res) => {
       })
     }).then(async token => {
       const notion_tokens = await token.text(); // pass on JSON string
-      res.status(200).send(`SUCCESS: ${notion_tokens}`);
+      res.status(200).redirect(`https://riverrun.app/success?tokens=${notion_tokens}`);
     });
   } catch (err) {
     _process.stderr.write('\nERROR ---\n' + err.message);
