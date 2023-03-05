@@ -41,21 +41,20 @@ app.post('/server/request', async (req, res) => {
     if (type === 'auth') {
       throw new Error("server backend doesn't handle Google tokens");
     } else {
-      _process.stdout.write('\n---REQUEST:\n' + JSON.stringify({
+      _process.stderr.write('\n---REQUEST:\n' + JSON.stringify({
         action,
         data,
         access_token,
         keys
       }));
       await (0, _backgroundApi.processRequest)(type, action, data, response => {
-        _process.stdout.write('\n\nGOT RESPONSE: ' + JSON.stringify(response));
         res.status(200).send(response);
       },
       // @ts-ignore
       _nodeFetch.default, access_token);
     }
   } catch (err) {
-    _process.stderr.write(err.message);
+    _process.stderr.write('\n' + err.message);
     res.status(400).send(err.message);
   }
 });
