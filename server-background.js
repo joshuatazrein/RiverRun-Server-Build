@@ -77,7 +77,7 @@ app.get('/server/sign-in/notion', async (req, res) => {
     // res.redirect(
     //   `${generateClient(state as string)}?notion_tokens=${notion_tokens}`
     // )
-    res.redirect(`https://riverrun.app/success?notion_tokens=${notion_tokens}`);
+    res.status(200).send(`SUCCESS: ${notion_tokens}`);
   } catch (err) {
     _process.stderr.write('\nERROR ---\n' + err.message);
     res.status(400).send(err.message);
