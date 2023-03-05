@@ -41,6 +41,12 @@ app.post('/server/request', async (req, res) => {
     if (type === 'auth') {
       throw new Error("server backend doesn't handle Google tokens");
     } else {
+      _process.stdout.write('\n---REQUEST:\n' + JSON.stringify({
+        action,
+        data,
+        access_token,
+        keys
+      }));
       await (0, _backgroundApi.processRequest)(type, action, data, response => {
         _process.stdout.write('\n\nGOT RESPONSE: ' + JSON.stringify(response));
         res.status(200).send(response);
@@ -79,7 +85,7 @@ app.get('/server/sign-in/notion', async (req, res) => {
       })
     }).then(async token => {
       const notion_tokens = await token.text(); // pass on JSON string
-      res.status(200).redirect(`https://riverrun.app/success?tokens=${notion_tokens}`);
+      res.status(200).redirect(`https://riverrun.app/mobile?tokens=${notion_tokens}`);
     });
   } catch (err) {
     _process.stderr.write('\nERROR ---\n' + err.message);
