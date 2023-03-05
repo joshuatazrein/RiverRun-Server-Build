@@ -59,7 +59,7 @@ app.get('/server/sign-in/notion', async (req, res) => {
       state
     } = req.query;
     const basicHeader = Buffer.from(`${keys.notion.client_id}:${keys.notion.client_secret}`, 'utf-8').toString('base64');
-    (0, _nodeFetch.default)('https://api.notion.com/v1/oauth/token', {
+    const token = await (0, _nodeFetch.default)('https://api.notion.com/v1/oauth/token', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${basicHeader}`,
@@ -71,12 +71,11 @@ app.get('/server/sign-in/notion', async (req, res) => {
         code,
         redirect_uri: SERVER + '/sign-in/notion'
       })
-    }).then(async token => {
-      const notion_tokens = await token.text(); // pass on JSON string
-      console.log('redirecting to', `${generateClient(state)}?notion_tokens=${notion_tokens}`);
-      res.redirect(`${generateClient(state)}?notion_tokens=${notion_tokens}`);
-    }, error => {});
+    });
+    const notion_tokens = await token.text(); // pass on JSON string
+    res.redirect(`${generateClient(state)}?notion_tokens=${notion_tokens}`);
   } catch (err) {
+    _process.stderr.write('\nERROR ---\n' + err.message);
     res.status(400).send(err.message);
   }
 });
