@@ -63,13 +63,14 @@ app.post('/server/request', async (req, res) => {
 //   `${generateClient(state as string)}?notion_tokens=${notion_tokens}`
 // )
 
-const noCache = (req, res, next) => {
-  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  res.header('Expires', '-1');
-  res.header('Pragma', 'no-cache');
-  next();
-};
-app.get('/server/login/notion', noCache, async (req, res) => {
+// const noCache: RequestHandler = (req, res, next) => {
+//   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+//   res.header('Expires', '-1')
+//   res.header('Pragma', 'no-cache')
+//   next()
+// }
+
+app.get('/server/login/notion', async (req, res) => {
   try {
     const {
       code,
