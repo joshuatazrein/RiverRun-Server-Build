@@ -69,7 +69,7 @@ const noCache = (req, res, next) => {
   res.header('Pragma', 'no-cache');
   next();
 };
-app.get('/server/sign-in/notion', noCache, async (req, res) => {
+app.get('/server/login/notion', noCache, async (req, res) => {
   try {
     const {
       code,
@@ -86,7 +86,7 @@ app.get('/server/sign-in/notion', noCache, async (req, res) => {
       body: JSON.stringify({
         grant_type: 'authorization_code',
         code,
-        redirect_uri: SERVER + '/sign-in/notion'
+        redirect_uri: SERVER + '/login/notion'
       })
     }).then(async token => {
       const notion_tokens = await token.text(); // pass on JSON string
@@ -97,13 +97,13 @@ app.get('/server/sign-in/notion', noCache, async (req, res) => {
     res.status(400).send(err.message);
   }
 });
-app.get('/server/sign-in/google', async (req, res) => {
+app.get('/server/login/google', async (req, res) => {
   try {
     const {
       code,
       state
     } = req.query;
-    const oAuth2Client = new _googleAuthLibrary.OAuth2Client(keys.google.client_id, keys.google.client_secret, SERVER + '/sign-in/google');
+    const oAuth2Client = new _googleAuthLibrary.OAuth2Client(keys.google.client_id, keys.google.client_secret, SERVER + '/login/google');
     const token = await oAuth2Client.getToken(code);
     const formattedTokens = {
       access_token: token.tokens.access_token,
