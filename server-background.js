@@ -59,31 +59,29 @@ app.get('/server/sign-in/notion', async (req, res) => {
       code,
       state
     } = req.query;
-    res.status(200).send('IT WORKED' + JSON.stringify(req.query));
+    // res.status(200).send('IT WORKED' + JSON.stringify(req.query))
 
-    // const basicHeader = Buffer.from(
-    //   `${keys.notion.client_id}:${keys.notion.client_secret}`,
-    //   'utf-8'
-    // ).toString('base64')
+    const basicHeader = Buffer.from(`${keys.notion.client_id}:${keys.notion.client_secret}`, 'utf-8').toString('base64');
+    (0, _nodeFetch.default)('https://api.notion.com/v1/oauth/token', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicHeader}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: SERVER + '/sign-in/notion'
+      })
+    }).then(async token => {
+      const notion_tokens = await token.text(); // pass on JSON string
+      res.status(200).send(`SUCCESS: ${notion_tokens}`);
+    });
 
-    // const token = await fetch('https://api.notion.com/v1/oauth/token', {
-    //   method: 'POST',
-    //   headers: {
-    //     Authorization: `Basic ${basicHeader}`,
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     grant_type: 'authorization_code',
-    //     code,
-    //     redirect_uri: SERVER + '/sign-in/notion'
-    //   })
-    // })
-    // const notion_tokens = await token.text() // pass on JSON string
     // res.redirect(
     //   `${generateClient(state as string)}?notion_tokens=${notion_tokens}`
     // )
-    // res.status(200).send(`SUCCESS: ${notion_tokens}`)
   } catch (err) {
     _process.stderr.write('\nERROR ---\n' + err.message);
     res.status(400).send(err.message);
