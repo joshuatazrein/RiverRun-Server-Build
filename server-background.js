@@ -58,24 +58,12 @@ app.post('/server/request', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
-
-// res.redirect(
-//   `${generateClient(state as string)}?notion_tokens=${notion_tokens}`
-// )
-
-// const noCache: RequestHandler = (req, res, next) => {
-//   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
-//   res.header('Expires', '-1')
-//   res.header('Pragma', 'no-cache')
-//   next()
-// }
-
 app.get('/server/login/notion', async (req, res) => {
+  const {
+    code,
+    state
+  } = req.query;
   try {
-    const {
-      code,
-      state
-    } = req.query;
     const basicHeader = Buffer.from(`${keys.notion.client_id}:${keys.notion.client_secret}`, 'utf-8').toString('base64');
     (0, _nodeFetch.default)('https://api.notion.com/v1/oauth/token', {
       method: 'POST',
@@ -95,15 +83,15 @@ app.get('/server/login/notion', async (req, res) => {
     });
   } catch (err) {
     _process.stderr.write('\nERROR ---\n' + err.message);
-    res.status(400).send(err.message);
+    res.redirect(`${generateClient(state)}?error=${err.message}`);
   }
 });
 app.get('/server/login/google', async (req, res) => {
+  const {
+    code,
+    state
+  } = req.query;
   try {
-    const {
-      code,
-      state
-    } = req.query;
     const oAuth2Client = new _googleAuthLibrary.OAuth2Client(keys.google.client_id, keys.google.client_secret, SERVER + '/login/google');
     const token = await oAuth2Client.getToken(code);
     const formattedTokens = {
@@ -113,7 +101,8 @@ app.get('/server/login/google', async (req, res) => {
     };
     res.redirect(`${generateClient(state)}?google_tokens=${JSON.stringify(formattedTokens)}`);
   } catch (err) {
-    res.status(400).send(err.message);
+    _process.stderr.write('\nERROR ---\n' + err.message);
+    res.redirect(`${generateClient(state)}?error=${err.message}`);
   }
 });
 app.listen(port, () => console.log('listening on port', port, 'from', SERVER));
