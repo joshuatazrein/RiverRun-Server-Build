@@ -12,7 +12,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const keys = JSON.parse((0, _fs.readFileSync)('./keys.json').toString('utf-8'));
 const generateClient = state => state === 'mobile' || state === 'localhost' ? 'https://riverrun.app/mobile' : state === 'web' ? 'https://riverrun.app' : 'ERROR';
-const SERVER = process.env.NODE_ENV === 'PRODUCTION' || process.env.NODE_ENV === 'Production' ? 'https://riverrun.app/server' : 'http://localhost:3001/server';
+const SERVER = process.env.NODE_ENV === 'production' ? 'https://riverrun.app/server' : 'http://localhost:3001/server';
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 var _exports = {};
 const app = (0, _express.default)();
