@@ -53,14 +53,17 @@ app.post('/server/request', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
+
+// res.redirect(
+//   `${generateClient(state as string)}?notion_tokens=${notion_tokens}`
+// )
+
 app.get('/server/sign-in/notion', async (req, res) => {
   try {
     const {
       code,
       state
     } = req.query;
-    // res.status(200).send('IT WORKED' + JSON.stringify(req.query))
-
     const basicHeader = Buffer.from(`${keys.notion.client_id}:${keys.notion.client_secret}`, 'utf-8').toString('base64');
     (0, _nodeFetch.default)('https://api.notion.com/v1/oauth/token', {
       method: 'POST',
@@ -78,10 +81,6 @@ app.get('/server/sign-in/notion', async (req, res) => {
       const notion_tokens = await token.text(); // pass on JSON string
       res.status(200).send(`SUCCESS: ${notion_tokens}`);
     });
-
-    // res.redirect(
-    //   `${generateClient(state as string)}?notion_tokens=${notion_tokens}`
-    // )
   } catch (err) {
     _process.stderr.write('\nERROR ---\n' + err.message);
     res.status(400).send(err.message);
