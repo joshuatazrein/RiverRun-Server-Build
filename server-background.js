@@ -68,10 +68,10 @@ app.post('/server/request', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
-app.get('/login/test', async (req, res) => {
+app.get('/server/login/test', async (req, res) => {
   res.send('worked');
 });
-app.get('/login/notion', async (req, res) => {
+app.get('/server/login/notion', async (req, res) => {
   const {
     code,
     state
@@ -99,7 +99,7 @@ app.get('/login/notion', async (req, res) => {
     res.redirect(`${generateClient(state)}?error=${err.message}`);
   }
 });
-app.get('/login/google', async (req, res) => {
+app.get('/server/login/google', async (req, res) => {
   const {
     code,
     state
