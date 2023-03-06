@@ -11,7 +11,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // backports to older version of node
 
 const keys = JSON.parse((0, _fs.readFileSync)('./keys.json').toString('utf-8'));
-const generateClient = state => state === 'mobile' || state === 'localhost' ? 'https://riverrun.app/mobile' : state === 'web' ? 'https://riverrun.app' : 'ERROR';
+const generateClient = state => state === 'mobile' ? 'https://riverrun.app/mobile' : state === 'web' ? 'https://riverrun.app' : state === 'localhost' ? 'http://localhost:3000' : 'ERROR';
 const SERVER = process.env.NODE_ENV === 'production' ? 'https://riverrun.app/server' : 'http://localhost:3001/server';
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 var _exports = {};
@@ -57,6 +57,9 @@ app.post('/server/request', async (req, res) => {
     _process.stderr.write('\n' + err.message);
     res.status(400).send(err.message);
   }
+});
+app.get('/server/login/test', async (req, res) => {
+  res.send('worked');
 });
 app.get('/server/login/notion', async (req, res) => {
   const {
