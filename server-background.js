@@ -15,7 +15,7 @@ const SERVER = process.env.NODE_ENV === 'production' ? 'https://riverrun.app/ser
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 var _exports = {};
 const app = (0, _express.default)();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 // var allowedDomains = [
 //   'capacitor://localhost',
@@ -68,10 +68,10 @@ app.post('/server/request', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
-app.get('/server/login/test', async (req, res) => {
+app.get('/login/test', async (req, res) => {
   res.send('worked');
 });
-app.get('/server/login/notion', async (req, res) => {
+app.get('/login/notion', async (req, res) => {
   const {
     code,
     state
@@ -99,7 +99,7 @@ app.get('/server/login/notion', async (req, res) => {
     res.redirect(`${generateClient(state)}?error=${err.message}`);
   }
 });
-app.get('/server/login/google', async (req, res) => {
+app.get('/login/google', async (req, res) => {
   const {
     code,
     state
