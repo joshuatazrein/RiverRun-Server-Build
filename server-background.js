@@ -58,10 +58,10 @@ app.post('/server/request', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
-app.get('/server/login/test', async (req, res) => {
+app.get('/server/login-test', async (req, res) => {
   res.send('worked');
 });
-app.get('/server/login/notion', async (req, res) => {
+app.get('/server/login-notion', async (req, res) => {
   const {
     code,
     state
@@ -89,7 +89,7 @@ app.get('/server/login/notion', async (req, res) => {
     res.redirect(`${generateClient(state)}?error=${err.message}`);
   }
 });
-app.get('/server/login/google', async (req, res) => {
+app.get('/server/login-google', async (req, res) => {
   const {
     code,
     state
