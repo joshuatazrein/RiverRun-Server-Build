@@ -1,6 +1,5 @@
 "use strict";
 
-var _cors = _interopRequireDefault(require("cors"));
 var _express = _interopRequireDefault(require("express"));
 var _fs = require("fs");
 var _nodeFetch = _interopRequireDefault(require("node-fetch"));
@@ -17,18 +16,29 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 var _exports = {};
 const app = (0, _express.default)();
 const port = 3001;
-var allowedDomains = ['capacitor://localhost', 'http://localhost:3000', 'https://api.notion.com', 'https://riverrun.app'];
-app.use((0, _cors.default)({
-  origin: function (origin, callback) {
-    // bypass the requests with no origin (like curl requests, mobile apps, etc )
-    if (!origin) return callback(null, true);
-    if (allowedDomains.indexOf(origin) === -1) {
-      var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
+
+// var allowedDomains = [
+//   'capacitor://localhost',
+//   'http://localhost:3000',
+//   'https://api.notion.com',
+//   'https://riverrun.app'
+// ]
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // bypass the requests with no origin (like curl requests, mobile apps, etc )
+//       if (!origin) return callback(null, true)
+
+//       if (allowedDomains.indexOf(origin) === -1) {
+//         var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`
+//         return callback(new Error(msg), false)
+//       }
+//       return callback(null, true)
+//     }
+//   })
+// )
+
 app.use('/server/request', _express.default.json());
 app.post('/server/request', async (req, res) => {
   try {
@@ -58,10 +68,10 @@ app.post('/server/request', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
-app.get('/server/login-test', async (req, res) => {
+app.get('/server/login/test', async (req, res) => {
   res.send('worked');
 });
-app.get('/server/login-notion', async (req, res) => {
+app.get('/server/login/notion', async (req, res) => {
   const {
     code,
     state
@@ -89,7 +99,7 @@ app.get('/server/login-notion', async (req, res) => {
     res.redirect(`${generateClient(state)}?error=${err.message}`);
   }
 });
-app.get('/server/login-google', async (req, res) => {
+app.get('/server/login/google', async (req, res) => {
   const {
     code,
     state
