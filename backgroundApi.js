@@ -101,6 +101,7 @@ const processRequest = async (type, action, data, sendResponse, fetchFunction, a
         break;
     }
   }
+  console.log('GOT RESPONSE:', response);
   sendResponse(response);
 };
 exports.processRequest = processRequest;
