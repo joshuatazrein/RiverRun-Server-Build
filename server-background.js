@@ -21,7 +21,9 @@ const ORIGINS = ['capacitor://localhost', 'http://localhost:3000', 'https://rive
 app.use('/server/request', (0, _cors.default)({
   origin: ORIGINS
 }), _express.default.json());
-app.post('/server/request', async (req, res) => {
+app.post('/server/request', (0, _cors.default)({
+  origin: ORIGINS
+}), _express.default.json(), async (req, res) => {
   console.log('THIS WORKED', req);
   try {
     const {
@@ -105,9 +107,10 @@ app.get('/server/login/google', (0, _cors.default)({
     res.redirect(`${generateClient(state)}?error=${err.message}`);
   }
 });
-app.post('/server/login/google/refresh', (0, _cors.default)({
+app.use('/server/login/google/refresh', (0, _cors.default)({
   origin: ORIGINS
-}), _express.default.json(), async (req, res) => {
+}), _express.default.json());
+app.post('/server/login/google/refresh', async (req, res) => {
   try {
     const {
       refresh_token
@@ -122,6 +125,7 @@ app.post('/server/login/google/refresh', (0, _cors.default)({
       expire_time: oAuth2Client.credentials.expiry_date
     });
   } catch (err) {
+    console.log('ERROR:', err.message);
     res.status(400).send(err.message);
   }
 });
